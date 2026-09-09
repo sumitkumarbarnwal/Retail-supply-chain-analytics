@@ -48,7 +48,7 @@ Your job is to convert business questions into accurate BigQuery SQL queries.
 === CURRENCY ===
 All monetary columns (revenue, unit_price, standard_price, price_variance, revenue_at_risk) are in Indian Rupees (INR/₹). Never use USD or $ when referring to these values.
 
-=== DATABASE: {{PROJECT_ID}}.retailiq_transformed ===
+=== DATABASE: {PROJECT_ID}.retailiq_transformed ===
 
 === TABLE 1: fct_sales_daily ===
 Purpose: Daily sales transactions — use for revenue, sales volume, product and store performance
@@ -58,38 +58,45 @@ Columns:
   sale_month         INT64       -- month number (1-12)
   sale_week          INT64       -- week number
   is_festive_season  BOOL        -- TRUE for Oct/Nov/Dec, FALSE otherwise
-  product_id         STRING      -- product identifier (e.g. PROD_001)
-  product_name       STRING      -- full product name
-  category           STRING      -- category (Electronics, Grocery, Clothing, etc.)
-  store_id           STRING      -- store identifier (e.g. STORE_001)
-  store_name         STRING      -- store name (e.g. Mumbai Flagship)
+  store_id           STRING      -- store identifier (e.g. STR01)
+  store_name         STRING      -- store name (e.g. Mumbai Retail Hub)
   city               STRING      -- city name
   region             STRING      -- region (North, South, East, West)
-  supplier_id        STRING      -- supplier identifier (e.g. SUP_001)
+  product_id         STRING      -- product identifier (e.g. PRD001)
+  product_name       STRING      -- full product name
+  category           STRING      -- category (Electronics, Grocery, Clothing, etc.)
+  supplier_id        STRING      -- supplier identifier (e.g. SUP01)
   quantity_sold      INT64       -- units sold
+  unit_price         FLOAT64     -- selling price in INR
   revenue            FLOAT64     -- total revenue in INR (quantity_sold * unit_price)
-  gross_profit       FLOAT64     -- gross profit in INR
-  margin_pct         FLOAT64     -- gross margin percentage (0-100)
+  standard_price     FLOAT64     -- standard product price in INR
   price_variance     FLOAT64     -- unit_price minus standard_price in INR
 
 === TABLE 2: fct_inventory_health ===
-Purpose: Current inventory status and stockout risk — snapshot at latest date
+Purpose: Current inventory status, stockout risk, and days of supply per store and product
+Note: In RetailIQ, inventory is tracked at retail stores (store_id, store_name, city, region). There is no "warehouse" table; stores hold the inventory.
 Columns:
-  product_id          STRING     -- product identifier
-  product_name        STRING     -- product name
-  category            STRING     -- product category
-  current_stock       INT64      -- current units in stock
-  reorder_point       INT64      -- minimum safe stock level
-  safety_stock        INT64      -- buffer stock level
-  stock_status        STRING     -- 'Healthy', 'Warning', 'Stockout'
-  days_of_inventory   FLOAT64    -- estimated days before stock runs out
-  revenue_at_risk     FLOAT64    -- potential lost revenue in INR if stocked out
-  is_understocked     INT64      -- 1 if stock is below reorder point, 0 if healthy
+  snapshot_date      STRING      -- inventory snapshot date
+  store_id           STRING      -- store identifier (e.g. STR01)
+  store_name         STRING      -- store name (e.g. Mumbai Retail Hub)
+  city               STRING      -- city name
+  region             STRING      -- region (North, South, East, West)
+  product_id         STRING      -- product identifier (e.g. PRD001)
+  product_name       STRING      -- product name
+  category           STRING      -- product category
+  unit_price         FLOAT64     -- unit price in INR
+  current_stock      INT64       -- current units in stock
+  reorder_point      INT64       -- minimum safe stock level
+  days_of_supply     FLOAT64     -- estimated days until stock runs out (use this for "running out next week", e.g. days_of_supply <= 7)
+  is_understocked    INT64       -- 1 if stock is below reorder point, 0 if healthy
+  stock_status       STRING      -- exactly one of: 'Stockout', 'Critical', 'Low', 'Healthy'
+  revenue_at_risk    FLOAT64     -- potential lost revenue in INR if stocked out
+  buffer_days        FLOAT64     -- days until reorder is needed
 
 === TABLE 3: agg_store_performance ===
 Purpose: Pre-aggregated store-level metrics across the full year
 Columns:
-  store_id              STRING   -- store identifier
+  store_id              STRING   -- store identifier (e.g. STR01)
   store_name            STRING   -- store name
   city                  STRING   -- city name
   region                STRING   -- region name
@@ -108,11 +115,14 @@ Columns:
    {PROJECT_ID}.retailiq_transformed.fct_inventory_health
    {PROJECT_ID}.retailiq_transformed.agg_store_performance
 
-2. DATA TYPE RULES — follow exactly:
-   - is_festive_season is BOOL → use: WHERE is_festive_season = TRUE or FALSE
-   - is_understocked is INT64 → use: WHERE is_understocked = 1 or = 0
-   - stock_status is STRING → use: WHERE stock_status = 'Stockout' (exact match, case sensitive)
-   - Never mix BOOL and INT64 comparisons
+2. DATA TYPE & COLUMN RULES — follow exactly:
+   - ONLY use column names that are explicitly listed above. NEVER guess or invent columns like 'safety_stock' or 'days_of_inventory'.
+   - The days of supply column in fct_inventory_health is named 'days_of_supply'.
+   - For questions about "warehouse" or "store" inventory depletion, query fct_inventory_health and select store_name / store_id.
+   - For "running out of inventory next week", filter by: WHERE days_of_supply <= 7 OR stock_status IN ('Stockout', 'Critical', 'Low').
+   - is_festive_season is BOOL → use: WHERE is_festive_season = TRUE or FALSE.
+   - is_understocked is INT64 → use: WHERE is_understocked = 1 or = 0.
+   - stock_status is STRING → use: WHERE stock_status = 'Stockout' or stock_status IN ('Stockout', 'Critical', 'Low').
 
 3. COLUMN AVAILABILITY:
    - supplier_id only exists in fct_sales_daily
@@ -269,6 +279,16 @@ async def ask(payload: QuestionRequest):
     sql = generate_sql(question)
 
     df, error = run_query(sql)
+    if error and "credentials not found" not in error.lower():
+        retry_prompt = f"{SCHEMA_CONTEXT}\n\nQuestion: {question}\n\nFailed Query:\n{sql}\n\nBigQuery Error: {error}\n\nGenerate the corrected BigQuery SQL query:"
+        fixed_sql = call_groq_completion(retry_prompt, max_tokens=350)
+        fixed_sql = fixed_sql.replace("```sql", "").replace("```", "").strip()
+        df_retry, error_retry = run_query(fixed_sql)
+        if not error_retry:
+            sql = fixed_sql
+            df = df_retry
+            error = None
+
     if error:
         if "credentials not found" in error.lower():
             return AskResponse(

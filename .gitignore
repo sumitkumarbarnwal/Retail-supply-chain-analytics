@@ -7,4 +7,5 @@ logs/
 target/
 dbt_packages/
 *.duckdb
+*.json
 Charts/Dashboard_Intractivity_check.mp4

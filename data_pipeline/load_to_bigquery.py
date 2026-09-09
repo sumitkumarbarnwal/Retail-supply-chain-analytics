@@ -13,7 +13,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger("bigquery_load")
 
-PROJECT_ID = "retailiq-analytics-502010"
+from dotenv import load_dotenv
+
+load_dotenv()
+
+PROJECT_ID = os.getenv("BIGQUERY_PROJECT_ID", "retailiq-analytics-508120")
 DATASET_ID = "retailiq_raw"
 RAW_DATA   = "raw_data"
 

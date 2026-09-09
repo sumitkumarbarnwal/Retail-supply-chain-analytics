@@ -8,4 +8,5 @@ target/
 dbt_packages/
 *.duckdb
 *.json
+profiles.yml
 Charts/Dashboard_Intractivity_check.mp4

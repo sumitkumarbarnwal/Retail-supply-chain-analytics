@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: retailiq_raw
-    project: retailiq-analytics-502010
+    project: retailiq-analytics-508120
     dataset: retailiq_raw
     tables:
       - name: raw_sales

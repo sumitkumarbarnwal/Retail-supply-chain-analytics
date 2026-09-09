@@ -11,7 +11,7 @@ import pandas as pd
 
 load_dotenv()
 
-PROJECT_ID = "retailiq-analytics-502010"
+PROJECT_ID = os.getenv("BIGQUERY_PROJECT_ID", "retailiq-analytics-508120")
 DATASET    = "retailiq_transformed"
 
 _groq_client = None
@@ -41,14 +41,14 @@ def get_bq():
     return _bq_client
 
 
-SCHEMA_CONTEXT = """
+SCHEMA_CONTEXT = f"""
 You are an expert supply chain data analyst AI for RetailIQ — a retail analytics platform.
 Your job is to convert business questions into accurate BigQuery SQL queries.
 
 === CURRENCY ===
 All monetary columns (revenue, unit_price, standard_price, price_variance, revenue_at_risk) are in Indian Rupees (INR/₹). Never use USD or $ when referring to these values.
 
-=== DATABASE: retailiq-analytics-502010.retailiq_transformed ===
+=== DATABASE: {{PROJECT_ID}}.retailiq_transformed ===
 
 === TABLE 1: fct_sales_daily ===
 Purpose: Daily sales transactions — use for revenue, sales volume, product and store performance
@@ -58,64 +58,55 @@ Columns:
   sale_month         INT64       -- month number (1-12)
   sale_week          INT64       -- week number
   is_festive_season  BOOL        -- TRUE for Oct/Nov/Dec, FALSE otherwise
-  store_id           STRING      -- store identifier e.g. STR01
-  store_name         STRING      -- full store name e.g. Mumbai Retail Hub
-  city               STRING      -- city name
-  region             STRING      -- East, West, North, South
-  product_id         STRING      -- product identifier e.g. PRD001
+  product_id         STRING      -- product identifier (e.g. PROD_001)
   product_name       STRING      -- full product name
-  category           STRING      -- Electronics, Apparel, Grocery, Home & Kitchen, Sports
-  supplier_id        STRING      -- supplier identifier e.g. SUP01
-  quantity_sold      INT64       -- number of units sold
-  unit_price         FLOAT64     -- actual selling price
-  revenue            FLOAT64     -- total revenue = quantity_sold * unit_price
-  standard_price     FLOAT64     -- standard product price
-  price_variance     FLOAT64     -- difference between revenue and standard cost
+  category           STRING      -- category (Electronics, Grocery, Clothing, etc.)
+  store_id           STRING      -- store identifier (e.g. STORE_001)
+  store_name         STRING      -- store name (e.g. Mumbai Flagship)
+  city               STRING      -- city name
+  region             STRING      -- region (North, South, East, West)
+  supplier_id        STRING      -- supplier identifier (e.g. SUP_001)
+  quantity_sold      INT64       -- units sold
+  revenue            FLOAT64     -- total revenue in INR (quantity_sold * unit_price)
+  gross_profit       FLOAT64     -- gross profit in INR
+  margin_pct         FLOAT64     -- gross margin percentage (0-100)
+  price_variance     FLOAT64     -- unit_price minus standard_price in INR
 
 === TABLE 2: fct_inventory_health ===
-Purpose: Inventory snapshot — use for stockout risk, understocking, days of supply
-IMPORTANT: For any question about stockout risk, understocking, or revenue impact, ALWAYS include revenue_at_risk in the SELECT clause.
-NOTE: This table does NOT have supplier_id. To get supplier info join with fct_sales_daily on product_id.
+Purpose: Current inventory status and stockout risk — snapshot at latest date
 Columns:
-  snapshot_date      STRING      -- inventory snapshot date
-  store_id           STRING      -- store identifier
-  store_name         STRING      -- full store name
-  city               STRING      -- city name
-  region             STRING      -- East, West, North, South
-  product_id         STRING      -- product identifier
-  product_name       STRING      -- full product name
-  category           STRING      -- Electronics, Apparel, Grocery, Home & Kitchen, Sports
-  unit_price         FLOAT64     -- product unit price
-  current_stock      INT64       -- current stock quantity
-  reorder_point      INT64       -- minimum safe stock level
-  days_of_supply     FLOAT64     -- estimated days until stockout
-  is_understocked    INT64       -- 1 = below reorder point, 0 = healthy (NOT BOOL — use 1 or 0)
-  stock_status       STRING      -- exactly one of: 'Stockout', 'Critical', 'Low', 'Healthy'
-  revenue_at_risk    FLOAT64     -- potential revenue loss if stockout occurs
-  buffer_days        FLOAT64     -- days until reorder is needed
+  product_id          STRING     -- product identifier
+  product_name        STRING     -- product name
+  category            STRING     -- product category
+  current_stock       INT64      -- current units in stock
+  reorder_point       INT64      -- minimum safe stock level
+  safety_stock        INT64      -- buffer stock level
+  stock_status        STRING     -- 'Healthy', 'Warning', 'Stockout'
+  days_of_inventory   FLOAT64    -- estimated days before stock runs out
+  revenue_at_risk     FLOAT64    -- potential lost revenue in INR if stocked out
+  is_understocked     INT64      -- 1 if stock is below reorder point, 0 if healthy
 
 === TABLE 3: agg_store_performance ===
-Purpose: Aggregated store KPIs — use for store-level comparisons and rankings
-NOTE: This table does NOT have supplier_id or product-level details.
+Purpose: Pre-aggregated store-level metrics across the full year
 Columns:
   store_id              STRING   -- store identifier
-  store_name            STRING   -- full store name
+  store_name            STRING   -- store name
   city                  STRING   -- city name
-  region                STRING   -- East, West, North, South
-  active_selling_days   INT64    -- number of days with sales
-  unique_products_sold  INT64    -- distinct products sold
-  total_units_sold      INT64    -- total quantity sold
-  total_revenue         FLOAT64  -- total revenue across all products
-  avg_daily_revenue     FLOAT64  -- average revenue per day
+  region                STRING   -- region name
+  active_selling_days   INT64    -- number of days store had sales
+  unique_products_sold  INT64    -- count of distinct products sold
+  total_units_sold      INT64    -- total volume of units sold
+  total_revenue         FLOAT64  -- total revenue generated in INR
+  avg_daily_revenue     FLOAT64  -- average daily revenue in INR
   revenue_per_day       FLOAT64  -- total revenue / active selling days
   festive_revenue       FLOAT64  -- revenue during Oct/Nov/Dec
   non_festive_revenue   FLOAT64  -- revenue outside Oct/Nov/Dec
 
 === STRICT SQL RULES ===
 1. Always use fully qualified table names:
-   retailiq-analytics-502010.retailiq_transformed.fct_sales_daily
-   retailiq-analytics-502010.retailiq_transformed.fct_inventory_health
-   retailiq-analytics-502010.retailiq_transformed.agg_store_performance
+   {PROJECT_ID}.retailiq_transformed.fct_sales_daily
+   {PROJECT_ID}.retailiq_transformed.fct_inventory_health
+   {PROJECT_ID}.retailiq_transformed.agg_store_performance
 
 2. DATA TYPE RULES — follow exactly:
    - is_festive_season is BOOL → use: WHERE is_festive_season = TRUE or FALSE

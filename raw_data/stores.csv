@@ -1,0 +1,11 @@
+store_id,store_name,city,region,store_size_sqft
+STR01,Mumbai Retail Hub,Mumbai,West,5434
+STR02,Delhi Retail Hub,Delhi,North,7385
+STR03,Bengaluru Retail Hub,Bengaluru,South,6781
+STR04,Pune Retail Hub,Pune,West,6630
+STR05,Hyderabad Retail Hub,Hyderabad,South,6282
+STR06,Chennai Retail Hub,Chennai,South,4591
+STR07,Kolkata Retail Hub,Kolkata,East,9657
+STR08,Ahmedabad Retail Hub,Ahmedabad,West,4136
+STR09,Surat Retail Hub,Surat,West,3673
+STR10,Jaipur Retail Hub,Jaipur,North,7486

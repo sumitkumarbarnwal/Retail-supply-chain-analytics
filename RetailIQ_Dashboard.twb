@@ -26,7 +26,7 @@
       <connection class='federated'>
         <named-connections>
           <named-connection caption='BigQuery' name='bigquery.0lrcb0y0ludzar0zx9qvl0gc011n'>
-            <connection CATALOG='publicdata' authentication='oauth' class='bigquery' connection-dialect='google-sql' server-oauth='' username='mohdhussainkhan.ds@gmail.com' />
+            <connection CATALOG='publicdata' authentication='oauth' class='bigquery' connection-dialect='google-sql' server-oauth='' username='sumitkumarbarnwal2019@gmail.com' />
           </named-connection>
         </named-connections>
       </connection>
@@ -40,13 +40,13 @@
       <connection class='federated'>
         <named-connections>
           <named-connection caption='BigQuery' name='bigquery.0yn2u830gj8i1w1bdwhqd00vvfey'>
-            <connection CATALOG='retailiq-analytics-502010' EXECCATALOG='retailiq-analytics-502010' authentication='oauth' class='bigquery' connection-dialect='google-sql' project='retailiq-analytics' schema='retailiq_transformed' server-oauth='' username='mohdhussainkhan.ds@gmail.com' />
+            <connection CATALOG='retailiq-analytics-508120' EXECCATALOG='retailiq-analytics-508120' authentication='oauth' class='bigquery' connection-dialect='google-sql' project='retailiq-analytics' schema='retailiq_transformed' server-oauth='' username='sumitkumarbarnwal2019@gmail.com' />
           </named-connection>
         </named-connections>
         <relation type='collection'>
-          <relation connection='bigquery.0yn2u830gj8i1w1bdwhqd00vvfey' name='fct_sales_daily' table='[retailiq-analytics-502010.retailiq_transformed].[fct_sales_daily]' type='table' />
-          <relation connection='bigquery.0yn2u830gj8i1w1bdwhqd00vvfey' name='agg_store_performance' table='[retailiq-analytics-502010.retailiq_transformed].[agg_store_performance]' type='table' />
-          <relation connection='bigquery.0yn2u830gj8i1w1bdwhqd00vvfey' name='fct_inventory_health' table='[retailiq-analytics-502010.retailiq_transformed].[fct_inventory_health]' type='table' />
+          <relation connection='bigquery.0yn2u830gj8i1w1bdwhqd00vvfey' name='fct_sales_daily' table='[retailiq-analytics-508120.retailiq_transformed].[fct_sales_daily]' type='table' />
+          <relation connection='bigquery.0yn2u830gj8i1w1bdwhqd00vvfey' name='agg_store_performance' table='[retailiq-analytics-508120.retailiq_transformed].[agg_store_performance]' type='table' />
+          <relation connection='bigquery.0yn2u830gj8i1w1bdwhqd00vvfey' name='fct_inventory_health' table='[retailiq-analytics-508120.retailiq_transformed].[fct_inventory_health]' type='table' />
         </relation>
         <cols>
           <map key='[active_selling_days]' value='[agg_store_performance].[active_selling_days]' />
@@ -729,17 +729,17 @@
         <objects>
           <object caption='agg_store_performance' id='agg_store_performance_A371BD34138C45CD97343C6390B994E0'>
             <properties context=''>
-              <relation connection='bigquery.0yn2u830gj8i1w1bdwhqd00vvfey' name='agg_store_performance' table='[retailiq-analytics-502010.retailiq_transformed].[agg_store_performance]' type='table' />
+              <relation connection='bigquery.0yn2u830gj8i1w1bdwhqd00vvfey' name='agg_store_performance' table='[retailiq-analytics-508120.retailiq_transformed].[agg_store_performance]' type='table' />
             </properties>
           </object>
           <object caption='fct_inventory_health' id='fct_inventory_health_2466453CA3BB4E1083DCD57BC87D049E'>
             <properties context=''>
-              <relation connection='bigquery.0yn2u830gj8i1w1bdwhqd00vvfey' name='fct_inventory_health' table='[retailiq-analytics-502010.retailiq_transformed].[fct_inventory_health]' type='table' />
+              <relation connection='bigquery.0yn2u830gj8i1w1bdwhqd00vvfey' name='fct_inventory_health' table='[retailiq-analytics-508120.retailiq_transformed].[fct_inventory_health]' type='table' />
             </properties>
           </object>
           <object caption='fct_sales_daily' id='fct_sales_daily_32083F9F0B784352ADF3CF9C60B6D225'>
             <properties context=''>
-              <relation connection='bigquery.0yn2u830gj8i1w1bdwhqd00vvfey' name='fct_sales_daily' table='[retailiq-analytics-502010.retailiq_transformed].[fct_sales_daily]' type='table' />
+              <relation connection='bigquery.0yn2u830gj8i1w1bdwhqd00vvfey' name='fct_sales_daily' table='[retailiq-analytics-508120.retailiq_transformed].[fct_sales_daily]' type='table' />
             </properties>
           </object>
         </objects>

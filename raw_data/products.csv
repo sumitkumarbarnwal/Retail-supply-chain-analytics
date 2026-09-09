@@ -1,0 +1,51 @@
+product_id,product_name,category,unit_price,reorder_point,lead_time_days,supplier_id
+PRD001,Samsung Electronics Item 1,Electronics,3720.67,25,6,SUP03
+PRD002,Philips Electronics Item 2,Electronics,480.35,37,3,SUP01
+PRD003,IKEA Electronics Item 3,Electronics,1201.67,48,3,SUP09
+PRD004,Philips Apparel Item 4,Apparel,2126.62,38,12,SUP05
+PRD005,Nestlé Electronics Item 5,Electronics,3505.79,31,7,SUP03
+PRD006,Apple Apparel Item 6,Apparel,555.94,34,4,SUP06
+PRD007,Reebok Grocery Item 7,Grocery,1359.38,12,14,SUP08
+PRD008,Nike Sports Item 8,Sports,4866.92,34,4,SUP09
+PRD009,Reebok Grocery Item 9,Grocery,4432.99,33,12,SUP04
+PRD010,Samsung Electronics Item 10,Electronics,3323.25,28,4,SUP04
+PRD011,Puma Electronics Item 11,Electronics,1425.97,50,8,SUP03
+PRD012,Apple Grocery Item 12,Grocery,1087.06,27,14,SUP02
+PRD013,Nestlé Sports Item 13,Sports,2693.99,25,5,SUP08
+PRD014,Adidas Home & Kitchen Item 14,Home & Kitchen,4948.14,50,14,SUP09
+PRD015,Apple Apparel Item 15,Apparel,4222.12,13,6,SUP01
+PRD016,Puma Grocery Item 16,Grocery,1375.32,23,12,SUP06
+PRD017,Britannia Apparel Item 17,Apparel,2008.38,39,5,SUP05
+PRD018,IKEA Apparel Item 18,Apparel,3737.7,44,7,SUP10
+PRD019,Reebok Home & Kitchen Item 19,Home & Kitchen,2027.03,24,5,SUP09
+PRD020,Nike Home & Kitchen Item 20,Home & Kitchen,3791.12,17,5,SUP03
+PRD021,Reebok Home & Kitchen Item 21,Home & Kitchen,364.46,34,12,SUP08
+PRD022,Adidas Sports Item 22,Sports,4856.84,10,13,SUP02
+PRD023,Adidas Sports Item 23,Sports,3854.56,31,4,SUP05
+PRD024,Nestlé Home & Kitchen Item 24,Home & Kitchen,2295.93,26,11,SUP03
+PRD025,Nike Sports Item 25,Sports,4359.07,29,13,SUP09
+PRD026,IKEA Sports Item 26,Sports,806.55,20,11,SUP09
+PRD027,Reebok Electronics Item 27,Electronics,1654.57,11,4,SUP06
+PRD028,IKEA Grocery Item 28,Grocery,336.73,46,4,SUP02
+PRD029,Nike Home & Kitchen Item 29,Home & Kitchen,4891.02,44,5,SUP03
+PRD030,Philips Home & Kitchen Item 30,Home & Kitchen,867.38,43,12,SUP07
+PRD031,Philips Apparel Item 31,Apparel,3788.56,22,14,SUP05
+PRD032,Apple Home & Kitchen Item 32,Home & Kitchen,2218.6,43,10,SUP02
+PRD033,IKEA Apparel Item 33,Apparel,366.93,11,12,SUP09
+PRD034,Reebok Apparel Item 34,Apparel,1140.08,14,14,SUP01
+PRD035,Nike Apparel Item 35,Apparel,4531.83,31,4,SUP09
+PRD036,Adidas Apparel Item 36,Apparel,3361.44,23,11,SUP03
+PRD037,Reebok Sports Item 37,Sports,2389.72,40,9,SUP04
+PRD038,Nike Electronics Item 38,Electronics,3311.96,32,9,SUP07
+PRD039,Samsung Home & Kitchen Item 39,Home & Kitchen,3383.15,16,3,SUP07
+PRD040,Nike Grocery Item 40,Grocery,1280.85,22,11,SUP08
+PRD041,Puma Apparel Item 41,Apparel,958.27,39,6,SUP02
+PRD042,Philips Home & Kitchen Item 42,Home & Kitchen,534.65,44,3,SUP02
+PRD043,Nestlé Apparel Item 43,Apparel,2061.75,40,6,SUP07
+PRD044,Nestlé Electronics Item 44,Electronics,1925.92,34,7,SUP08
+PRD045,Puma Grocery Item 45,Grocery,3498.13,45,13,SUP08
+PRD046,IKEA Apparel Item 46,Apparel,1518.7,13,12,SUP09
+PRD047,Apple Electronics Item 47,Electronics,332.97,47,10,SUP09
+PRD048,Nestlé Sports Item 48,Sports,331.55,42,4,SUP03
+PRD049,Reebok Electronics Item 49,Electronics,386.41,25,9,SUP02
+PRD050,IKEA Sports Item 50,Sports,2915.65,12,12,SUP02

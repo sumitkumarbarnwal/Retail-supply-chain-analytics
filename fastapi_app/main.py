@@ -166,19 +166,38 @@ def get_model():
     return _selected_model
 
 
-def generate_sql(question: str) -> str:
+def call_groq_completion(prompt: str, max_tokens: int = 300) -> str:
     global _groq_client
+    client = get_groq()
+    primary_model = get_model()
+    candidates = [primary_model] + [
+        m for m in ["groq/compound-mini", "openai/gpt-oss-20b", "groq/compound", "qwen/qwen3.8-27b"]
+        if m != primary_model
+    ]
+
+    last_err = None
+    for model in candidates:
+        try:
+            resp = client.chat.completions.create(
+                model=model,
+                max_tokens=max_tokens,
+                messages=[{"role": "user", "content": prompt}]
+            )
+            return resp.choices[0].message.content.strip()
+        except Exception as e:
+            err_str = str(e)
+            if "401" in err_str or "invalid_api_key" in err_str:
+                _groq_client = None
+                raise HTTPException(status_code=502, detail=f"Groq auth error: {e}")
+            last_err = e
+            continue
+
+    raise HTTPException(status_code=502, detail=f"Groq error: {last_err}")
+
+
+def generate_sql(question: str) -> str:
     prompt = f"{SCHEMA_CONTEXT}\n\nBusiness Question: {question}\n\nSQL Query:"
-    try:
-        response = get_groq().chat.completions.create(
-            model=get_model(),
-            messages=[{"role": "user", "content": prompt}]
-        )
-    except Exception as e:
-        if "401" in str(e) or "invalid_api_key" in str(e):
-            _groq_client = None
-        raise HTTPException(status_code=502, detail=f"Groq error: {e}")
-    sql = response.choices[0].message.content.strip()
+    sql = call_groq_completion(prompt, max_tokens=350)
     sql = sql.replace("```sql", "").replace("```", "").strip()
     return sql
 
@@ -200,7 +219,6 @@ def run_query(sql: str):
 
 
 def generate_insight(question: str, df: pd.DataFrame) -> str:
-    global _groq_client
     data_summary = df.to_string(index=False)
     prompt = f"""
 You are a supply chain analytics expert.
@@ -214,16 +232,7 @@ Use standard formatting (e.g. ₹90,38,72,305.62). Do not convert to lakhs or cr
 Write a clear, concise business insight in 2-3 sentences.
 Focus on the business impact and what action should be taken.
 """
-    try:
-        response = get_groq().chat.completions.create(
-            model=get_model(),
-            messages=[{"role": "user", "content": prompt}]
-        )
-    except Exception as e:
-        if "401" in str(e) or "invalid_api_key" in str(e):
-            _groq_client = None
-        raise HTTPException(status_code=502, detail=f"Groq error: {e}")
-    return response.choices[0].message.content.strip()
+    return call_groq_completion(prompt, max_tokens=250)
 
 
 app = FastAPI(title="RetailIQ AI Copilot", version="1.0.0")

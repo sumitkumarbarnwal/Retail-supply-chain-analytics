@@ -22,11 +22,12 @@ def get_groq():
     global _groq_client
     if _groq_client is None:
         from groq import Groq
+        load_dotenv(override=True)
         key = os.getenv("GROQ_API_KEY")
-        if not key:
+        if not key or key == "your_groq_api_key_here":
             raise HTTPException(
                 status_code=503,
-                detail="GROQ_API_KEY is not set. Add it to your .env file and restart the server."
+                detail="GROQ_API_KEY is not set. Add your real key to the .env file."
             )
         _groq_client = Groq(api_key=key)
     return _groq_client
@@ -135,12 +136,48 @@ Columns:
 """
 
 
+_selected_model = None
+
+
+def get_model():
+    global _selected_model
+    if _selected_model:
+        return _selected_model
+    env_model = os.getenv("GROQ_MODEL")
+    if env_model:
+        _selected_model = env_model
+        return _selected_model
+    try:
+        available = [m.id for m in get_groq().models.list().data]
+        candidates = [
+            "llama-3.3-70b-versatile",
+            "qwen/qwen3.8-27b",
+            "groq/compound",
+            "openai/gpt-oss-120b",
+            "groq/compound-mini",
+        ]
+        for candidate in candidates:
+            if candidate in available:
+                _selected_model = candidate
+                return _selected_model
+        _selected_model = available[0] if available else "qwen/qwen3.8-27b"
+    except Exception:
+        _selected_model = "qwen/qwen3.8-27b"
+    return _selected_model
+
+
 def generate_sql(question: str) -> str:
+    global _groq_client
     prompt = f"{SCHEMA_CONTEXT}\n\nBusiness Question: {question}\n\nSQL Query:"
-    response = get_groq().chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[{"role": "user", "content": prompt}]
-    )
+    try:
+        response = get_groq().chat.completions.create(
+            model=get_model(),
+            messages=[{"role": "user", "content": prompt}]
+        )
+    except Exception as e:
+        if "401" in str(e) or "invalid_api_key" in str(e):
+            _groq_client = None
+        raise HTTPException(status_code=502, detail=f"Groq error: {e}")
     sql = response.choices[0].message.content.strip()
     sql = sql.replace("```sql", "").replace("```", "").strip()
     return sql
@@ -153,10 +190,17 @@ def run_query(sql: str):
         df = get_bq().query(sql, job_config=job_config).to_dataframe()
         return df, None
     except Exception as e:
-        return None, str(e)
+        err_msg = str(e)
+        if "DefaultCredentialsError" in err_msg or "default credentials were not found" in err_msg:
+            err_msg = (
+                "Google Cloud credentials not found. Run 'gcloud auth application-default login' "
+                "in your terminal to connect to BigQuery, or use 'Generate SQL Only' to inspect queries."
+            )
+        return None, err_msg
 
 
 def generate_insight(question: str, df: pd.DataFrame) -> str:
+    global _groq_client
     data_summary = df.to_string(index=False)
     prompt = f"""
 You are a supply chain analytics expert.
@@ -170,10 +214,15 @@ Use standard formatting (e.g. ₹90,38,72,305.62). Do not convert to lakhs or cr
 Write a clear, concise business insight in 2-3 sentences.
 Focus on the business impact and what action should be taken.
 """
-    response = get_groq().chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[{"role": "user", "content": prompt}]
-    )
+    try:
+        response = get_groq().chat.completions.create(
+            model=get_model(),
+            messages=[{"role": "user", "content": prompt}]
+        )
+    except Exception as e:
+        if "401" in str(e) or "invalid_api_key" in str(e):
+            _groq_client = None
+        raise HTTPException(status_code=502, detail=f"Groq error: {e}")
     return response.choices[0].message.content.strip()
 
 
@@ -221,6 +270,17 @@ async def ask(payload: QuestionRequest):
 
     df, error = run_query(sql)
     if error:
+        if "credentials not found" in error.lower():
+            return AskResponse(
+                sql=sql,
+                columns=["Notice"],
+                rows=[["BigQuery credentials required for live table execution. SQL successfully generated above."]],
+                insight=(
+                    "SQL generated successfully via Groq AI! To execute this query live against Google BigQuery, "
+                    "authenticate Google Cloud by running 'gcloud auth application-default login' in your terminal."
+                ),
+                row_count=0
+            )
         raise HTTPException(status_code=500, detail=f"BigQuery error: {error}")
 
     insight = generate_insight(question, df)

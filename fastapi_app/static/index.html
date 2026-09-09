@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RetailIQ — Supply Chain AI Copilot</title>
+  <meta name="description" content="RetailIQ AI Copilot: Ask any supply chain business question in plain English. Powered by Groq LLaMA3 and Google BigQuery." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <div class="layout">
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon">🛒</span>
+        <div class="logo-text">
+          <h1>RetailIQ</h1>
+          <p>Supply Chain AI</p>
+        </div>
+      </div>
+
+      <div class="sidebar-badge">
+        <span class="badge-dot"></span>
+        Groq LLaMA3 + BigQuery
+      </div>
+
+      <div class="sidebar-section">
+        <h3 class="sidebar-title">📊 Data Coverage</h3>
+        <ul class="stat-list">
+          <li class="stat-item">
+            <span class="stat-icon">📈</span>
+            <div class="stat-info">
+              <span class="stat-value">91,690</span>
+              <span class="stat-label">Sales Transactions</span>
+            </div>
+          </li>
+          <li class="stat-item">
+            <span class="stat-icon">🏪</span>
+            <div class="stat-info">
+              <span class="stat-value">10</span>
+              <span class="stat-label">Stores Across India</span>
+            </div>
+          </li>
+          <li class="stat-item">
+            <span class="stat-icon">📦</span>
+            <div class="stat-info">
+              <span class="stat-value">50</span>
+              <span class="stat-label">Products</span>
+            </div>
+          </li>
+          <li class="stat-item">
+            <span class="stat-icon">🗓️</span>
+            <div class="stat-info">
+              <span class="stat-value">365</span>
+              <span class="stat-label">Days of Data</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <h3 class="sidebar-title">🗄️ Tables</h3>
+        <ul class="table-list">
+          <li class="table-badge">fct_sales_daily</li>
+          <li class="table-badge">fct_inventory_health</li>
+          <li class="table-badge">agg_store_performance</li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <h3 class="sidebar-title">🌍 Regions</h3>
+        <div class="region-pills">
+          <span class="pill pill-north">North</span>
+          <span class="pill pill-south">South</span>
+          <span class="pill pill-east">East</span>
+          <span class="pill pill-west">West</span>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="footer-status" id="apiStatus">
+          <span class="status-dot status-ok"></span>
+          <span>API Ready</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+
+      <header class="page-header">
+        <div class="header-left">
+          <h2 class="page-title">AI Copilot</h2>
+          <p class="page-subtitle">Ask any supply chain question in plain English</p>
+        </div>
+        <div class="header-right">
+          <div class="currency-badge">
+            <span>₹</span> INR Only
+          </div>
+        </div>
+      </header>
+
+      <section class="chips-section" aria-label="Example questions">
+        <p class="chips-label">💡 Try these</p>
+        <div class="chips-row">
+          <button class="chip" id="chip1" onclick="setQuestion('Which store has the highest total revenue?')">
+            <span class="chip-icon">🏆</span> Highest revenue store
+          </button>
+          <button class="chip" id="chip2" onclick="setQuestion('Which products have stock status as Stockout?')">
+            <span class="chip-icon">⚠️</span> Products at stockout risk
+          </button>
+          <button class="chip" id="chip3" onclick="setQuestion('Which region has the highest total revenue?')">
+            <span class="chip-icon">🗺️</span> Top performing region
+          </button>
+          <button class="chip" id="chip4" onclick="setQuestion('What is the total revenue by product category?')">
+            <span class="chip-icon">📊</span> Revenue by category
+          </button>
+          <button class="chip" id="chip5" onclick="setQuestion('Which products have days of supply less than 7?')">
+            <span class="chip-icon">🚨</span> Critical stock levels
+          </button>
+          <button class="chip" id="chip6" onclick="setQuestion('Compare festive vs non-festive revenue by store')">
+            <span class="chip-icon">🎉</span> Festive vs non-festive
+          </button>
+        </div>
+      </section>
+
+      <section class="input-card glass-card">
+        <div class="input-wrapper">
+          <label class="input-label" for="questionInput">Your Business Question</label>
+          <div class="input-row">
+            <div class="input-field-wrap">
+              <span class="input-icon">🔍</span>
+              <textarea
+                id="questionInput"
+                class="question-input"
+                rows="2"
+                placeholder="e.g. Which warehouse is at risk of running out of inventory next week?"
+                autocomplete="off"
+              ></textarea>
+            </div>
+            <button class="ask-btn" id="askBtn" onclick="askQuestion()">
+              <span class="btn-text">Analyze</span>
+              <span class="btn-icon">→</span>
+              <span class="btn-loader" id="btnLoader" hidden>
+                <svg class="spinner" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" stroke-dasharray="31.4" stroke-dashoffset="10"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+          <p class="input-hint" id="inputHint">Press Enter or click Analyze to get your answer</p>
+        </div>
+      </section>
+
+      <div id="resultsSection" class="results-section hidden">
+
+        <div class="result-card glass-card" id="sqlCard">
+          <div class="card-header">
+            <div class="card-title-row">
+              <span class="card-icon">📝</span>
+              <h3 class="card-title">Generated SQL Query</h3>
+            </div>
+            <button class="copy-btn" id="copyBtn" onclick="copySQL()" title="Copy SQL">
+              <span id="copyIcon">⎘</span>
+              <span id="copyText">Copy</span>
+            </button>
+          </div>
+          <pre class="sql-block" id="sqlBlock"><code id="sqlCode"></code></pre>
+        </div>
+
+        <div class="result-card glass-card" id="dataCard">
+          <div class="card-header">
+            <div class="card-title-row">
+              <span class="card-icon">📊</span>
+              <h3 class="card-title">Query Results</h3>
+            </div>
+            <div class="row-count-badge" id="rowCountBadge">— rows</div>
+          </div>
+          <div class="table-wrapper" id="tableWrapper"></div>
+        </div>
+
+        <div class="result-card insight-card glass-card" id="insightCard">
+          <div class="card-header">
+            <div class="card-title-row">
+              <span class="card-icon">💼</span>
+              <h3 class="card-title">Business Insight</h3>
+            </div>
+            <span class="ai-badge">AI Generated</span>
+          </div>
+          <p class="insight-text" id="insightText"></p>
+        </div>
+
+      </div>
+
+      <div id="errorCard" class="result-card error-card glass-card hidden">
+        <div class="card-header">
+          <span class="card-icon">❌</span>
+          <h3 class="card-title">Error</h3>
+        </div>
+        <p class="error-text" id="errorText"></p>
+      </div>
+
+      <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-card glass-card">
+          <div class="loading-animation">
+            <div class="loading-ring"></div>
+            <div class="loading-ring ring-2"></div>
+            <div class="loading-ring ring-3"></div>
+          </div>
+          <p class="loading-title">Analyzing your data…</p>
+          <div class="loading-steps">
+            <div class="loading-step" id="step1">
+              <span class="step-dot active"></span>
+              <span>Generating SQL with LLaMA3</span>
+            </div>
+            <div class="loading-step" id="step2">
+              <span class="step-dot"></span>
+              <span>Querying BigQuery</span>
+            </div>
+            <div class="loading-step" id="step3">
+              <span class="step-dot"></span>
+              <span>Generating business insight</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

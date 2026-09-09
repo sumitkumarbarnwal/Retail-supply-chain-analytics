@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: retailiq_raw
+    project: retailiq-analytics-502010
+    dataset: retailiq_raw
+    tables:
+      - name: raw_sales
+      - name: raw_products
+      - name: raw_stores
+      - name: raw_inventory

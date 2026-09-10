@@ -9,4 +9,6 @@ dbt_packages/
 *.duckdb
 *.json
 profiles.yml
+*.pdf
+*.docx
 Charts/Dashboard_Intractivity_check.mp4

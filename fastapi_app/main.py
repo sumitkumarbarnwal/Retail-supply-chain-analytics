@@ -36,7 +36,29 @@ def get_groq():
 def get_bq():
     global _bq_client
     if _bq_client is None:
+        import json
         from google.cloud import bigquery
+        from google.oauth2 import service_account
+
+        # 1. Check for raw JSON string in environment variable (Render / Cloud deployment)
+        sa_json = os.getenv("GCP_SERVICE_ACCOUNT_JSON")
+        if sa_json:
+            try:
+                info = json.loads(sa_json)
+                creds = service_account.Credentials.from_service_account_info(info)
+                _bq_client = bigquery.Client(project=PROJECT_ID, credentials=creds)
+                return _bq_client
+            except Exception:
+                pass
+
+        # 2. Check for credentials file path
+        creds_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+        if creds_path and os.path.exists(creds_path):
+            creds = service_account.Credentials.from_service_account_file(creds_path)
+            _bq_client = bigquery.Client(project=PROJECT_ID, credentials=creds)
+            return _bq_client
+
+        # 3. Default credentials
         _bq_client = bigquery.Client(project=PROJECT_ID)
     return _bq_client
 

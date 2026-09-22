@@ -4,6 +4,18 @@
   padding: 0;
 }
 
+button {
+  background: transparent;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  box-shadow: none;
+}
+
 :root {
   --bg-deep: #07090e;
   --bg-nav: #0b0f19;
@@ -832,29 +844,34 @@ html, body {
   color: var(--text-white);
 }
 
-.preview-chart-box {
+.preview-chart-box,
+.results-chart-side {
   display: flex;
   align-items: flex-end;
   gap: 6px;
-  padding: 8px 6px;
-  background: rgba(0, 0, 0, 0.2);
+  padding: 8px 8px;
+  background: rgba(0, 0, 0, 0.25);
   border-radius: 6px;
   border: 1px solid var(--border-card);
+  height: 100%;
 }
 
-.chart-y-ticks {
+.chart-y-ticks,
+.mini-preview-y-axis {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  font-size: 0.58rem;
+  font-size: 0.6rem;
   font-family: var(--font-code);
   color: var(--text-dim);
   text-align: right;
-  width: 26px;
+  width: 30px;
+  user-select: none;
 }
 
-.preview-bars {
+.preview-bars,
+.preview-chart-bars {
   flex: 1;
   display: flex;
   align-items: flex-end;
@@ -867,15 +884,48 @@ html, body {
   flex: 1;
   background: linear-gradient(180deg, #38bdf8, #1e3a8a);
   border-radius: 2px;
+  min-width: 6px;
+  transition: height 0.3s ease;
 }
 
-.preview-insight-strip {
-  padding: 10px 14px;
-  background: rgba(99, 102, 241, 0.08);
-  border-top: 1px solid var(--border-card);
-  font-size: 0.75rem;
+.preview-insight-strip,
+.insight-strip-panel {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 12px 18px;
+  background: var(--bg-card);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.insight-sparkle-icon {
+  color: #38bdf8;
+  font-size: 1.1rem;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.insight-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.insight-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #38bdf8;
+  text-transform: uppercase;
+}
+
+.insight-body-text {
+  font-size: 0.78rem;
   color: #cbd5e1;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .insight-bullet {

@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/style.css?v=20260923b" />
 </head>
 <body>
 
@@ -121,8 +121,8 @@
             <span>₹3000</span>
             <span>0</span>
           </div>
-          <div class="spline-chart-wrapper">
-            <svg viewBox="0 0 220 50" class="spline-svg" preserveAspectRatio="none">
+          <div class="spline-chart-wrapper" style="height: 50px; max-height: 50px; overflow: hidden;">
+            <svg viewBox="0 0 220 50" class="spline-svg" style="width: 100%; height: 50px; max-height: 50px; display: block;" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35" />
@@ -568,6 +568,6 @@ LIMIT 1;</code></pre>
   <!-- FLOATING TOAST MESSAGE -->
   <div id="toastMessage" class="toast-popup hidden"></div>
 
-  <script src="/static/app.js"></script>
+  <script src="/static/app.js?v=20260923b"></script>
 </body>
 </html>

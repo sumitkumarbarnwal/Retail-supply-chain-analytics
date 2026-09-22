@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/static/style.css?v=20260923b" />
+  <link rel="stylesheet" href="/static/style.css?v=20260923c" />
 </head>
 <body>
 
@@ -121,18 +121,18 @@
             <span>₹3000</span>
             <span>0</span>
           </div>
-          <div class="spline-chart-wrapper" style="height: 50px; max-height: 50px; overflow: hidden;">
-            <svg viewBox="0 0 220 50" class="spline-svg" style="width: 100%; height: 50px; max-height: 50px; display: block;" preserveAspectRatio="none">
+          <div class="spline-chart-wrapper">
+            <svg viewBox="0 0 220 54" class="spline-svg" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35" />
                   <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0" />
                 </linearGradient>
               </defs>
-              <path id="kpiSplineArea" d="M 0 35 Q 35 15, 70 30 T 140 18 T 185 24 T 220 20 L 220 50 L 0 50 Z" fill="url(#areaGradient)" />
-              <path id="kpiSplineLine" d="M 0 35 Q 35 15, 70 30 T 140 18 T 185 24 T 220 20" fill="none" stroke="#38bdf8" stroke-width="2" />
-              <circle id="kpiSplineDot" cx="110" cy="22" r="3.5" fill="#38bdf8" />
-              <circle id="kpiSplineDotPulse" cx="110" cy="22" r="7" fill="#38bdf8" fill-opacity="0.25" />
+              <path id="kpiSplineArea" d="M 0 40 Q 35 24, 70 34 T 110 26 T 155 20 T 185 26 T 220 22 L 220 54 L 0 54 Z" fill="url(#areaGradient)" />
+              <path id="kpiSplineLine" d="M 0 40 Q 35 24, 70 34 T 110 26 T 155 20 T 185 26 T 220 22" fill="none" stroke="#38bdf8" stroke-width="2" />
+              <circle id="kpiSplineDot" cx="110" cy="26" r="3.5" fill="#38bdf8" />
+              <circle id="kpiSplineDotPulse" cx="110" cy="26" r="7" fill="#38bdf8" fill-opacity="0.25" />
             </svg>
             <div class="chart-floating-tooltip" id="kpiSplineTooltip">
               <span id="kpiTooltipText">Sep 15: ₹3500</span>

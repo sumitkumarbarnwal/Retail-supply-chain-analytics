@@ -306,9 +306,10 @@ html, body {
   display: flex;
   align-items: flex-end;
   gap: 8px;
-  height: 52px;
+  height: 68px;
   position: relative;
-  margin-top: 4px;
+  margin-top: 6px;
+  padding-top: 14px;
 }
 
 .chart-y-axis {
@@ -316,38 +317,44 @@ html, body {
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  font-size: 0.6rem;
+  font-size: 0.62rem;
   color: var(--text-dim);
   font-family: var(--font-code);
   text-align: right;
-  width: 32px;
+  width: 34px;
+  user-select: none;
+  padding-bottom: 2px;
 }
 
 .spline-chart-wrapper {
   flex: 1;
   height: 100%;
   position: relative;
+  overflow: visible;
 }
 
 .spline-svg {
   width: 100%;
   height: 100%;
   overflow: visible;
+  display: block;
 }
 
 .chart-floating-tooltip {
   position: absolute;
-  top: -8px;
-  left: 45%;
+  top: 0px;
+  left: 50%;
   transform: translateX(-50%);
-  background: rgba(15, 23, 42, 0.95);
-  border: 1px solid var(--accent-blue);
-  padding: 2px 8px;
+  background: rgba(14, 20, 32, 0.95);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  padding: 3px 8px;
   border-radius: 4px;
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   color: #e0f2fe;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
 }
 
 .chart-x-axis {

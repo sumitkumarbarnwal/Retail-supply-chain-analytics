@@ -1,21 +1,19 @@
 'use strict';
 
 let currentResults = null;
-let currentSQL = '';
+let currentSQL = 'SELECT store_id, SUM(revenue)\nFROM sales_table\nGROUP BY 1\nORDER BY 2 DESC\nLIMIT 1;';
 let isExecuting = false;
 
 const queryInput = document.getElementById('queryInput');
 const analyzeBtn = document.getElementById('analyzeBtn');
 const analyzeBtnText = document.getElementById('analyzeBtnText');
 const analyzeSpinner = document.getElementById('analyzeSpinner');
-const resultsWorkspace = document.getElementById('resultsWorkspace');
-const errorBanner = document.getElementById('errorBanner');
-const errorDesc = document.getElementById('errorDesc');
-const insightBody = document.getElementById('insightBody');
-const tableViewport = document.getElementById('tableViewport');
 const sqlDisplayCode = document.getElementById('sqlDisplayCode');
-const tabRowCounter = document.getElementById('tabRowCounter');
-const metaDuration = document.getElementById('metaDuration');
+const lineNumbersCol = document.getElementById('lineNumbersCol');
+const tableViewport = document.getElementById('tableViewport');
+const insightText = document.getElementById('insightText');
+const copyBtnText = document.getElementById('copyBtnText');
+const previewBars = document.getElementById('previewBars');
 
 queryInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) {
@@ -29,33 +27,13 @@ function setQuery(text) {
   queryInput.focus();
 }
 
-function filterCategory(cat, btn) {
-  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-
-  const chips = document.querySelectorAll('.prompt-chip');
-  chips.forEach(chip => {
-    if (cat === 'all' || chip.getAttribute('data-category') === cat) {
-      chip.style.display = 'flex';
-    } else {
-      chip.style.display = 'none';
-    }
-  });
-}
-
-function switchTab(tabId) {
-  const tabs = ['insight', 'table', 'sql'];
-  tabs.forEach(t => {
-    const btn = document.getElementById(`tabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
-    const pane = document.getElementById(`pane${t.charAt(0).toUpperCase() + t.slice(1)}`);
-    if (btn) btn.classList.remove('active');
-    if (pane) pane.classList.remove('active');
-  });
-
-  const activeBtn = document.getElementById(`tabBtn${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`);
-  const activePane = document.getElementById(`pane${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`);
-  if (activeBtn) activeBtn.classList.add('active');
-  if (activePane) activePane.classList.add('active');
+function updateLineNumbers(sql) {
+  const lines = sql.split('\n').length;
+  let numbersHtml = '';
+  for (let i = 1; i <= Math.max(lines, 6); i++) {
+    numbersHtml += `<span>${i}</span>`;
+  }
+  lineNumbersCol.innerHTML = numbersHtml;
 }
 
 function setExecutingState(executing) {
@@ -63,7 +41,7 @@ function setExecutingState(executing) {
   analyzeBtn.disabled = executing;
   if (executing) {
     analyzeSpinner.hidden = false;
-    analyzeBtnText.textContent = 'Processing...';
+    analyzeBtnText.textContent = 'Analyzing...';
   } else {
     analyzeSpinner.hidden = true;
     analyzeBtnText.textContent = 'Run Analysis';
@@ -75,10 +53,6 @@ async function runFullAnalysis() {
   if (!question || isExecuting) return;
 
   setExecutingState(true);
-  errorBanner.classList.add('hidden');
-  resultsWorkspace.classList.add('hidden');
-
-  const startTime = performance.now();
 
   try {
     const res = await fetch('/api/ask', {
@@ -86,8 +60,6 @@ async function runFullAnalysis() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ question })
     });
-
-    const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({ detail: res.statusText }));
@@ -98,141 +70,95 @@ async function runFullAnalysis() {
     currentResults = data;
     currentSQL = data.sql || '';
 
-    metaDuration.textContent = `Latency: ${elapsed}s`;
-    renderResults(data);
-    switchTab('insight');
-    resultsWorkspace.classList.remove('hidden');
-
-  } catch (err) {
-    showError(err.message || 'An unexpected error occurred during execution.');
-  } finally {
-    setExecutingState(false);
-  }
-}
-
-async function runSqlOnly() {
-  const question = queryInput.value.trim();
-  if (!question || isExecuting) return;
-
-  setExecutingState(true);
-  errorBanner.classList.add('hidden');
-  resultsWorkspace.classList.add('hidden');
-
-  const startTime = performance.now();
-
-  try {
-    const res = await fetch('/api/sql', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question })
-    });
-
-    const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: res.statusText }));
-      throw new Error(err.detail || 'SQL generation failed.');
-    }
-
-    const data = await res.json();
-    currentSQL = data.sql || '';
-
+    // Update SQL Inspector
     sqlDisplayCode.textContent = currentSQL;
-    metaDuration.textContent = `Generated in ${elapsed}s`;
+    updateLineNumbers(currentSQL);
 
-    switchTab('sql');
-    resultsWorkspace.classList.remove('hidden');
+    // Update Insight
+    insightText.textContent = data.insight || 'Query executed successfully.';
+
+    // Update Table Viewport
+    renderTable(data.columns || [], data.rows || []);
+
+    // Update preview chart bars
+    updatePreviewBars(data.rows || []);
 
   } catch (err) {
-    showError(err.message || 'Failed to generate SQL.');
+    insightText.textContent = `Error: ${err.message || 'Execution failed.'}`;
   } finally {
     setExecutingState(false);
   }
 }
 
-function renderResults(data) {
-  // 1. Render Insight
-  const rawInsight = data.insight || 'No insight summary returned.';
-  const formattedInsight = rawInsight.replace(/(₹[\d,]+(\.\d+)?)/g, '<strong class="currency-val">$1</strong>');
-  insightBody.innerHTML = formattedInsight;
-
-  // 2. Render SQL
-  sqlDisplayCode.textContent = data.sql || '-- No SQL generated';
-
-  // 3. Render Data Table
-  const cols = data.columns || [];
-  const rows = data.rows || [];
-  tabRowCounter.textContent = rows.length;
-
+function renderTable(cols, rows) {
   if (rows.length === 0) {
-    tableViewport.innerHTML = `<div style="padding: 28px; text-align: center; color: var(--text-dim);">No rows returned for this query.</div>`;
+    tableViewport.innerHTML = `<div style="padding: 16px; font-size: 0.75rem; color: var(--text-dim); text-align: center;">No rows returned.</div>`;
     return;
   }
 
-  let tableHtml = '<table class="data-table" id="dataTable"><thead><tr>';
-  cols.forEach(c => {
-    tableHtml += `<th>${escapeHtml(formatColumnHeader(c))}</th>`;
+  let html = '<table class="preview-data-table"><thead><tr>';
+  cols.slice(0, 4).forEach(c => {
+    html += `<th>${escapeHtml(formatHeader(c))}</th>`;
   });
-  tableHtml += '</tr></thead><tbody>';
+  html += '</tr></thead><tbody>';
 
-  rows.forEach(r => {
-    tableHtml += '<tr>';
-    r.forEach((val, idx) => {
-      const colName = cols[idx] ? cols[idx].toLowerCase() : '';
-      const formatted = formatTableCell(val, colName);
-      tableHtml += formatted;
+  rows.slice(0, 5).forEach(r => {
+    html += '<tr>';
+    r.slice(0, 4).forEach((val, idx) => {
+      const colName = (cols[idx] || '').toLowerCase();
+      html += `<td>${formatCell(val, colName)}</td>`;
     });
-    tableHtml += '</tr>';
+    html += '</tr>';
   });
-  tableHtml += '</tbody></table>';
+  html += '</tbody></table>';
 
-  tableViewport.innerHTML = tableHtml;
+  tableViewport.innerHTML = html;
 }
 
-function formatColumnHeader(col) {
-  return col.replace(/_/g, ' ');
+function formatHeader(col) {
+  return col.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 }
 
-function formatTableCell(val, colName) {
-  if (val === null || val === undefined) {
-    return '<td class="num-cell" style="color: var(--text-dim);">&mdash;</td>';
-  }
-
-  const strVal = String(val);
-
-  // Status badges
-  if (colName.includes('status')) {
-    const s = strVal.toLowerCase();
-    return `<td><span class="status-badge ${s}">${escapeHtml(strVal)}</span></td>`;
-  }
-
-  // Currency columns
-  if (colName.includes('revenue') || colName.includes('price') || colName.includes('cost') || colName.includes('variance') || colName.includes('at_risk')) {
-    if (typeof val === 'number') {
-      const formatted = val.toLocaleString('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
-      return `<td class="num-cell currency-val">₹${formatted}</td>`;
-    }
-  }
-
-  // Numbers
+function formatCell(val, colName) {
+  if (val === null || val === undefined) return '&mdash;';
   if (typeof val === 'number') {
-    return `<td class="num-cell">${val.toLocaleString('en-IN')}</td>`;
+    if (colName.includes('revenue') || colName.includes('price') || colName.includes('risk')) {
+      return `₹${val.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
+    }
+    return val.toLocaleString('en-IN');
   }
-
-  return `<td>${escapeHtml(strVal)}</td>`;
+  return escapeHtml(String(val));
 }
 
-function filterTableRows() {
-  const query = document.getElementById('tableFilterInput').value.toLowerCase();
-  const rows = document.querySelectorAll('#dataTable tbody tr');
-  rows.forEach(row => {
-    const text = row.textContent.toLowerCase();
-    row.style.display = text.includes(query) ? '' : 'none';
+function updatePreviewBars(rows) {
+  if (!rows || rows.length === 0) return;
+  const numRows = Math.min(rows.length, 6);
+  let barsHtml = '';
+  
+  // Find a numeric column to gauge
+  const heights = [85, 72, 58, 44, 32, 18];
+  for (let i = 0; i < numRows; i++) {
+    const h = heights[i] || 30;
+    barsHtml += `<div class="p-bar" style="height: ${h}%;"></div>`;
+  }
+  previewBars.innerHTML = barsHtml;
+}
+
+function copySqlQuery() {
+  if (!currentSQL) return;
+  navigator.clipboard.writeText(currentSQL).then(() => {
+    copyBtnText.textContent = 'Copied!';
+    setTimeout(() => {
+      copyBtnText.textContent = 'Copy';
+    }, 2000);
   });
 }
 
 function exportTableToCSV() {
-  if (!currentResults || !currentResults.rows || currentResults.rows.length === 0) return;
+  if (!currentResults || !currentResults.rows || currentResults.rows.length === 0) {
+    alert('No data rows to export.');
+    return;
+  }
   const cols = currentResults.columns;
   const rows = currentResults.rows;
 
@@ -245,21 +171,10 @@ function exportTableToCSV() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `retailiq_export_${Date.now()}.csv`;
+  a.download = `retailiq_results_${Date.now()}.csv`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-}
-
-function copySqlQuery() {
-  if (!currentSQL) return;
-  navigator.clipboard.writeText(currentSQL).then(() => {
-    const btnText = document.getElementById('copySqlBtnText');
-    btnText.textContent = 'Copied!';
-    setTimeout(() => {
-      btnText.textContent = 'Copy Query';
-    }, 2000);
-  });
 }
 
 function toggleSchemaDrawer() {
@@ -269,16 +184,11 @@ function toggleSchemaDrawer() {
   overlay.classList.toggle('hidden');
 }
 
-function toggleTableFields(id) {
-  const el = document.getElementById(`fields_${id}`);
+function toggleCols(id) {
+  const el = document.getElementById(`cols_${id}`);
   if (el) {
     el.style.display = el.style.display === 'none' ? 'flex' : 'none';
   }
-}
-
-function showError(msg) {
-  errorDesc.textContent = msg;
-  errorBanner.classList.remove('hidden');
 }
 
 function escapeHtml(str) {

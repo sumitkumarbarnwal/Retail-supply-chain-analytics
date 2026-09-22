@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RetailIQ — Enterprise Supply Chain Intelligence</title>
-  <meta name="description" content="Enterprise Supply Chain Data Intelligence Platform powered by Google BigQuery and Groq LPU inference." />
+  <title>RetailIQ — Supply Chain Decision Platform</title>
+  <meta name="description" content="RetailIQ Enterprise Supply Chain Decision Platform powered by Google BigQuery and Groq LPU." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
@@ -12,404 +12,499 @@
 </head>
 <body>
 
-  <div class="app-container">
-    
-    <!-- TOP NAVIGATION -->
-    <header class="top-nav">
-      <div class="nav-left">
-        <div class="brand-badge">
-          <div class="brand-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-              <line x1="12" y1="22.08" x2="12" y2="12"></line>
-            </svg>
-          </div>
-          <div class="brand-meta">
-            <div class="brand-title">
-              <span>RetailIQ</span>
-              <span class="version-tag">ENTERPRISE</span>
-            </div>
-            <span class="brand-sub">Supply Chain Decision Platform</span>
-          </div>
-        </div>
-      </div>
+  <div class="platform-wrapper">
 
-      <div class="nav-center">
-        <div class="telemetry-pill">
-          <span class="status-pulse"></span>
-          <span class="telemetry-label">BigQuery Warehouse:</span>
-          <span class="telemetry-val" id="telemetryProject">retailiq-analytics-508120</span>
-        </div>
-        <div class="telemetry-pill">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
-            <rect x="9" y="9" width="6" height="6"></rect>
-            <line x1="9" y1="1" x2="9" y2="4"></line>
-            <line x1="15" y1="1" x2="15" y2="4"></line>
-            <line x1="9" y1="20" x2="9" y2="23"></line>
-            <line x1="15" y1="20" x2="15" y2="23"></line>
-            <line x1="20" y1="9" x2="23" y2="9"></line>
-            <line x1="20" y1="14" x2="23" y2="14"></line>
-            <line x1="1" y1="9" x2="4" y2="9"></line>
-            <line x1="1" y1="14" x2="4" y2="14"></line>
+    <!-- TOP NAVIGATION BAR -->
+    <header class="navbar">
+      <div class="nav-brand-section">
+        <div class="cube-icon-box">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
           </svg>
-          <span class="telemetry-label">Inference:</span>
-          <span class="telemetry-val">Groq LPU Engine</span>
+        </div>
+        <div class="brand-titles">
+          <div class="brand-main">
+            <span class="brand-name">RetailIQ</span>
+            <span class="enterprise-pill">ENTERPRISE</span>
+          </div>
+          <span class="brand-sub">Supply Chain Decision Platform</span>
         </div>
       </div>
 
-      <div class="nav-right">
-        <button class="nav-btn" id="openSchemaBtn" onclick="toggleSchemaDrawer()">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="nav-controls-section">
+        <button class="nav-icon-btn" title="Search queries">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+
+        <button class="nav-pill-btn" onclick="toggleSchemaDrawer()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
             <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
             <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
           </svg>
           <span>Schema Explorer</span>
         </button>
-        <div class="currency-indicator">INR (₹)</div>
+
+        <div class="currency-tag">
+          <span>₹</span>
+          <span>INR</span>
+        </div>
+
+        <div class="date-range-picker">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span>Sep 1-30, 2026</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+
+        <div class="pipeline-status-badge">
+          <span class="pulsing-green-dot"></span>
+          <span>Data Pipeline: Active</span>
+        </div>
       </div>
     </header>
 
-    <!-- MAIN DASHBOARD CONTENT -->
-    <main class="main-content">
-
-      <!-- KPI METRICS SUMMARY STRIP -->
-      <section class="kpi-strip" aria-label="Warehouse KPI Summary">
-        <div class="kpi-card">
-          <div class="kpi-header">
-            <span class="kpi-label">Total Revenue Processed</span>
-            <span class="kpi-indicator green">Live</span>
-          </div>
-          <div class="kpi-value">₹90,38,72,305.62</div>
-          <div class="kpi-footer">Across 10 Flagship Retail Hubs</div>
-        </div>
-
-        <div class="kpi-card">
-          <div class="kpi-header">
-            <span class="kpi-label">Sales Transactions</span>
-            <span class="kpi-tag">365 Days</span>
-          </div>
-          <div class="kpi-value">91,690</div>
-          <div class="kpi-footer">dbt Modeled Fact Rows</div>
-        </div>
-
-        <div class="kpi-card">
-          <div class="kpi-header">
-            <span class="kpi-label">Product Catalog</span>
-            <span class="kpi-tag">5 Categories</span>
-          </div>
-          <div class="kpi-value">50 SKUs</div>
-          <div class="kpi-footer">Electronics, Apparel, Grocery</div>
-        </div>
-
-        <div class="kpi-card">
-          <div class="kpi-header">
-            <span class="kpi-label">Stockout Risk Threshold</span>
-            <span class="kpi-indicator amber">Active</span>
-          </div>
-          <div class="kpi-value">17 SKUs</div>
-          <div class="kpi-footer">Days of Supply &le; 7 Days</div>
-        </div>
-      </section>
-
-      <!-- QUERY STUDIO -->
-      <section class="query-studio">
-        <div class="studio-header">
-          <div class="studio-title-block">
-            <h1 class="studio-title">Natural Language Analytics Studio</h1>
-            <p class="studio-desc">Translate executive supply chain queries into deterministic Google BigQuery SQL queries in sub-second latency.</p>
-          </div>
-          <div class="category-filters" id="categoryFilters">
-            <button class="filter-pill active" onclick="filterCategory('all', this)">All Questions</button>
-            <button class="filter-pill" onclick="filterCategory('revenue', this)">Revenue & Stores</button>
-            <button class="filter-pill" onclick="filterCategory('inventory', this)">Inventory & Stockout</button>
-            <button class="filter-pill" onclick="filterCategory('festive', this)">Festive Season</button>
+    <!-- TOP KPI 4-CARD METRIC STRIP -->
+    <section class="kpi-grid">
+      
+      <!-- CARD 1: REVENUE WITH SPLINE CHART -->
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <div class="kpi-title-row">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span class="kpi-title-text">TOTAL REVENUE PROCESSED</span>
           </div>
         </div>
+        <div class="kpi-value-row">
+          <span class="kpi-big-number">₹90,38,72,305.62</span>
+          <span class="badge-positive">+2.1% v LW</span>
+        </div>
+        <div class="mini-chart-container">
+          <div class="chart-y-axis">
+            <span>₹5000</span>
+            <span>₹3000</span>
+            <span>0</span>
+          </div>
+          <div class="spline-chart-wrapper">
+            <svg viewBox="0 0 220 50" class="spline-svg" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35" />
+                  <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0" />
+                </linearGradient>
+              </defs>
+              <path d="M 0 35 Q 35 15, 70 30 T 140 18 T 185 24 T 220 20 L 220 50 L 0 50 Z" fill="url(#areaGradient)" />
+              <path d="M 0 35 Q 35 15, 70 30 T 140 18 T 185 24 T 220 20" fill="none" stroke="#38bdf8" stroke-width="2" />
+              <circle cx="110" cy="22" r="3.5" fill="#38bdf8" />
+              <circle cx="110" cy="22" r="7" fill="#38bdf8" fill-opacity="0.25" />
+            </svg>
+            <div class="chart-floating-tooltip">
+              <span>Sep 15: ₹3500</span>
+            </div>
+          </div>
+        </div>
+        <div class="chart-x-axis">
+          <span>1 day</span>
+          <span>10 day</span>
+          <span>20 day</span>
+          <span>30 day</span>
+        </div>
+      </div>
 
-        <!-- EXAMPLE QUERY CHIPS -->
-        <div class="prompt-chips-container" id="promptChips">
-          <button class="prompt-chip" data-category="revenue" onclick="setQuery('Which store has the highest total revenue?')">
-            <span class="chip-dot"></span>
-            <span>Which store has the highest total revenue?</span>
+      <!-- CARD 2: SALES TRANSACTIONS WITH BAR CHART -->
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <span class="kpi-title-text">SALES TRANSACTIONS</span>
+          <span class="mini-tag">365 Days</span>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-big-number">91,690</span>
+          <span class="basket-badge">Av. Basket: ₹980</span>
+        </div>
+        <div class="mini-chart-container">
+          <div class="chart-y-axis">
+            <span>1500</span>
+            <span>1000</span>
+            <span>300</span>
+            <span>0</span>
+          </div>
+          <div class="bar-chart-visual">
+            <div class="bar-col"><div class="bar-fill" style="height: 65%;"></div></div>
+            <div class="bar-col"><div class="bar-fill" style="height: 75%;"></div></div>
+            <div class="bar-col"><div class="bar-fill" style="height: 90%;"></div></div>
+            <div class="bar-col"><div class="bar-fill" style="height: 55%;"></div></div>
+            <div class="bar-col"><div class="bar-fill" style="height: 40%;"></div></div>
+          </div>
+        </div>
+        <div class="chart-x-axis">
+          <span>Electronics</span>
+          <span>Apparel</span>
+          <span>Diet</span>
+          <span>Electron...</span>
+          <span>Other</span>
+        </div>
+      </div>
+
+      <!-- CARD 3: PRODUCT CATALOG WITH HORIZONTAL PROGRESS -->
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <span class="kpi-title-text">PRODUCT CATALOG</span>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-big-number">50 SKUs</span>
+        </div>
+        <div class="horizontal-bars-area">
+          <div class="hbar-item">
+            <span class="hbar-label">Electronics</span>
+            <div class="hbar-track">
+              <div class="hbar-fill" style="width: 78%;">
+                <div class="hbar-cursor-tooltip">
+                  <strong>SKU SKU</strong>
+                  <div>• Category: 50 SKUs</div>
+                  <div>• Inventory Value: ₹12M</div>
+                  <div>• Active Promos: 3</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="hbar-item">
+            <span class="hbar-label">Apparel</span>
+            <div class="hbar-track"><div class="hbar-fill" style="width: 62%;"></div></div>
+          </div>
+          <div class="hbar-item">
+            <span class="hbar-label">Category</span>
+            <div class="hbar-track"><div class="hbar-fill" style="width: 48%;"></div></div>
+          </div>
+        </div>
+        <div class="hbar-x-axis">
+          <span>0</span>
+          <span>20</span>
+        </div>
+      </div>
+
+      <!-- CARD 4: STOCKOUT RISK MATRIX HEATMAP -->
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <span class="kpi-title-text">STOCKOUT RISK THRESHOLD</span>
+          <a href="#resultsWorkspace" class="details-link">View Details &rarr;</a>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-big-number">17 SKUs</span>
+        </div>
+        <div class="heatmap-container">
+          <div class="heatmap-y-labels">
+            <span>Regions</span>
+            <span>Warehouses</span>
+            <span>Warehouses</span>
+          </div>
+          <div class="heatmap-matrix">
+            <div class="hm-row">
+              <div class="hm-cell lvl-blue"></div>
+              <div class="hm-cell lvl-blue"></div>
+              <div class="hm-cell lvl-light"></div>
+              <div class="hm-cell lvl-orange"></div>
+              <div class="hm-cell lvl-blue"></div>
+            </div>
+            <div class="hm-row">
+              <div class="hm-cell lvl-blue"></div>
+              <div class="hm-cell lvl-orange"></div>
+              <div class="hm-cell lvl-red"></div>
+              <div class="hm-cell lvl-orange"></div>
+              <div class="hm-cell lvl-orange"></div>
+            </div>
+            <div class="hm-row">
+              <div class="hm-cell lvl-dark"></div>
+              <div class="hm-cell lvl-blue"></div>
+              <div class="hm-cell lvl-red"></div>
+              <div class="hm-cell lvl-orange"></div>
+              <div class="hm-cell lvl-blue"></div>
+            </div>
+            <div class="hm-col-labels">
+              <span>R1</span>
+              <span>W2</span>
+              <span>W3</span>
+              <span>W4</span>
+              <span>W5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- MAIN TWO-COLUMN BODY LAYOUT -->
+    <div class="body-layout">
+      
+      <!-- LEFT SIDEBAR -->
+      <aside class="sidebar-nav">
+        <ul class="nav-menu-list">
+          <li class="menu-item"><span class="menu-icon">&#x2727;</span> Pinned</li>
+          <li class="menu-item"><span class="menu-icon">&#x2921;</span> Demand Planning</li>
+          <li class="menu-item active"><span class="menu-icon">&gt;</span> Sales Planning</li>
+          <li class="menu-item"><span class="menu-icon">&#x22BF;</span> Series Analysts</li>
+          <li class="menu-divider"></li>
+          <li class="menu-item"><span class="menu-icon">&#x25A4;</span> Demand Planning</li>
+          <li class="menu-item"><span class="menu-icon">&#x2697;</span> Inventory &amp; Stockout</li>
+          <li class="menu-item"><span class="menu-icon">&#x2611;</span> Forecast Planning</li>
+          <li class="menu-item"><span class="menu-icon">&#x2261;</span> Foriest Planning</li>
+          <li class="menu-item"><span class="menu-icon">&#x2709;</span> Contact Planning</li>
+          <li class="menu-divider"></li>
+          <li class="menu-item"><span class="menu-icon">&#x25CA;</span> Revenue</li>
+        </ul>
+      </aside>
+
+      <!-- RIGHT STUDIO AREA -->
+      <main class="studio-main">
+        
+        <div class="studio-heading-group">
+          <h2 class="studio-main-title">Natural Language Analytics Studio</h2>
+          <p class="studio-sub-title">Translate executive supply chain queries into deterministic Google BigQuery SQL queries in sub-second latency.</p>
+        </div>
+
+        <!-- 6 QUESTION CHIPS (WITH BULLET DOTS) -->
+        <div class="prompt-pills-grid">
+          <button class="pill-chip" onclick="setQuery('Which store has the highest total revenue?')">
+            <span class="p-dot purple"></span> Which store has the highest total revenue?
           </button>
-          <button class="prompt-chip" data-category="inventory" onclick="setQuery('Which warehouse is at risk of running out of inventory next week?')">
-            <span class="chip-dot alert"></span>
-            <span>Which warehouse is at risk of running out of inventory next week?</span>
+          <button class="pill-chip" onclick="setQuery('Which warehouse is at risk of running out of inventory next week?')">
+            <span class="p-dot orange"></span> Which warehouse is at risk of running out of inventory next week?
           </button>
-          <button class="prompt-chip" data-category="revenue" onclick="setQuery('Show me top 5 products by revenue')">
-            <span class="chip-dot"></span>
-            <span>Show me top 5 products by revenue</span>
+          <button class="pill-chip" onclick="setQuery('Show me top 5 products by revenue')">
+            <span class="p-dot purple"></span> Show me top 5 products by revenue
           </button>
-          <button class="prompt-chip" data-category="inventory" onclick="setQuery('Which products currently have stock status as Stockout?')">
-            <span class="chip-dot alert"></span>
-            <span>Which products currently have stock status as Stockout?</span>
+          <button class="pill-chip" onclick="setQuery('Which products currently show a Stockout status?')">
+            <span class="p-dot orange"></span> Which products currently show a Stockout status?
           </button>
-          <button class="prompt-chip" data-category="festive" onclick="setQuery('Compare festive vs non-festive revenue by store')">
-            <span class="chip-dot"></span>
-            <span>Compare festive vs non-festive revenue by store</span>
+          <button class="pill-chip" onclick="setQuery('Compare festive vs non-festive revenue by store')">
+            <span class="p-dot purple"></span> Compare festive vs non-festive revenue by store
           </button>
-          <button class="prompt-chip" data-category="revenue" onclick="setQuery('What is the total revenue by product category?')">
-            <span class="chip-dot"></span>
-            <span>What is the total revenue by product category?</span>
+          <button class="pill-chip" onclick="setQuery('What is the total revenue by product category?')">
+            <span class="p-dot purple"></span> What is the total revenue by product category?
           </button>
         </div>
 
-        <!-- CONSOLE INPUT BOX -->
-        <div class="console-box">
-          <div class="console-input-area">
-            <div class="console-prefix">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="4 17 10 11 4 5"></polyline>
-                <line x1="12" y1="19" x2="20" y2="19"></line>
+        <!-- COMMAND INPUT BAR -->
+        <div class="command-bar-box">
+          <div class="command-input-container">
+            <div class="command-symbol">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
               </svg>
             </div>
             <textarea
               id="queryInput"
-              class="query-textarea"
-              rows="2"
-              placeholder="Ask any supply chain business question in plain English (e.g. Compare regional revenue and return rate)..."
+              class="command-input-field"
+              rows="1"
+              placeholder="Ask any supply chain business question in plain English..."
               autocomplete="off"
-              spellcheck="false"
             ></textarea>
           </div>
-          <div class="console-actions">
-            <div class="shortcut-hints">
-              <span class="kbd">Enter</span> to run analysis &nbsp;&bull;&nbsp; <span class="kbd">Shift + Enter</span> for new line
+          <div class="command-right-controls">
+            <div class="model-select-badge">
+              <span>Groq LPU (Fast)</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
             </div>
-            <div class="action-buttons">
-              <button class="btn btn-secondary" id="sqlOnlyBtn" onclick="runSqlOnly()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="16 18 22 12 16 6"></polyline>
-                  <polyline points="8 6 2 12 8 18"></polyline>
-                </svg>
-                <span>Generate SQL</span>
-              </button>
-              <button class="btn btn-primary" id="analyzeBtn" onclick="runFullAnalysis()">
-                <span class="btn-spinner" id="analyzeSpinner" hidden></span>
-                <svg class="btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
-                <span id="analyzeBtnText">Run Analysis</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- RESULTS WORKSPACE -->
-      <section class="results-workspace hidden" id="resultsWorkspace">
-        
-        <!-- WORKSPACE TABS -->
-        <div class="workspace-tabs-bar">
-          <div class="tabs-list">
-            <button class="tab-btn active" id="tabBtnInsight" onclick="switchTab('insight')">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-                <polyline points="10 9 9 9 8 9"></polyline>
+            <button class="run-analysis-btn" id="analyzeBtn" onclick="runFullAnalysis()">
+              <span class="btn-spinner" id="analyzeSpinner" hidden></span>
+              <svg class="play-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
               </svg>
-              <span>Executive Intelligence</span>
-            </button>
-            <button class="tab-btn" id="tabBtnTable" onclick="switchTab('table')">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="3" y1="9" x2="21" y2="9"></line>
-                <line x1="3" y1="15" x2="21" y2="15"></line>
-                <line x1="9" y1="3" x2="9" y2="21"></line>
-                <line x1="15" y1="3" x2="15" y2="21"></line>
-              </svg>
-              <span>Data Grid</span>
-              <span class="tab-counter" id="tabRowCounter">0</span>
-            </button>
-            <button class="tab-btn" id="tabBtnSql" onclick="switchTab('sql')">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="16 18 22 12 16 6"></polyline>
-                <polyline points="8 6 2 12 8 18"></polyline>
-              </svg>
-              <span>BigQuery SQL</span>
+              <span id="analyzeBtnText">Run Analysis</span>
             </button>
           </div>
-
-          <div class="workspace-meta" id="workspaceMeta">
-            <span class="meta-tag" id="metaDuration">~0.32s</span>
-            <span class="meta-tag" id="metaDialect">BigQuery Standard SQL</span>
-          </div>
         </div>
 
-        <!-- TAB CONTENT: EXECUTIVE INSIGHT -->
-        <div class="tab-pane active" id="paneInsight">
-          <div class="insight-container">
-            <div class="insight-meta-header">
-              <div class="badge-intel">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                </svg>
-                <span>Automated Synthesis &amp; Action Recommendation</span>
-              </div>
-              <div class="insight-timestamp" id="insightTimestamp">Just now</div>
-            </div>
-
-            <div class="insight-content-block">
-              <div class="insight-body" id="insightBody"></div>
-            </div>
-
-            <div class="insight-action-callout">
-              <div class="callout-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="12" y1="16" x2="12" y2="12"></line>
-                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                </svg>
-              </div>
-              <div class="callout-text">
-                <strong>Warehouse Operational Recommendation:</strong> Cross-reference this analysis with regional store safety stocks to initiate buffer inventory reallocation.
+        <!-- SPLIT WORKSPACE: QUERY INSPECTOR (LEFT) + RESULTS PREVIEW (RIGHT) -->
+        <div class="split-workspace-panel">
+          
+          <!-- LEFT PANE: QUERY INSPECTOR -->
+          <div class="workspace-card query-inspector-card">
+            <div class="card-bar">
+              <span class="card-bar-title">Query Inspector</span>
+              <div class="card-bar-actions">
+                <span class="code-type-pill">&gt;_ Snow type &#9662;</span>
+                <button class="mini-action-btn" onclick="copySqlQuery()">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <span id="copyBtnText">Copy</span>
+                </button>
               </div>
             </div>
-          </div>
-        </div>
-
-        <!-- TAB CONTENT: DATA TABLE -->
-        <div class="tab-pane" id="paneTable">
-          <div class="table-toolbar">
-            <div class="table-search">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-              <input type="text" id="tableFilterInput" placeholder="Filter rows in results..." oninput="filterTableRows()" />
-            </div>
-            <button class="btn btn-sm" onclick="exportTableToCSV()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-              <span>Export CSV</span>
-            </button>
-          </div>
-          <div class="table-viewport" id="tableViewport"></div>
-        </div>
-
-        <!-- TAB CONTENT: SQL STUDIO -->
-        <div class="tab-pane" id="paneSql">
-          <div class="sql-studio-card">
-            <div class="sql-studio-header">
-              <div class="sql-file-info">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                </svg>
-                <span>query.sql</span>
-                <span class="dialect-badge">BigQuery GoogleSQL</span>
+            <div class="code-editor-viewport">
+              <div class="line-numbers-col" id="lineNumbersCol">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
               </div>
-              <button class="btn btn-sm" id="copySqlBtn" onclick="copySqlQuery()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
-                <span id="copySqlBtnText">Copy Query</span>
-              </button>
+              <pre class="code-content-col"><code id="sqlDisplayCode">SELECT store_id, SUM(revenue)
+FROM sales_table
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 1;</code></pre>
             </div>
-            <pre class="sql-display-area"><code id="sqlDisplayCode"></code></pre>
           </div>
-        </div>
-      </section>
 
-      <!-- ERROR STATE CARD -->
-      <section class="error-banner hidden" id="errorBanner">
-        <div class="error-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
-        </div>
-        <div class="error-details">
-          <div class="error-title">Query Execution Notice</div>
-          <div class="error-desc" id="errorDesc"></div>
-        </div>
-      </section>
+          <!-- RIGHT PANE: RESULTS PREVIEW WITH TABLE & MINI BAR CHART -->
+          <div class="workspace-card results-preview-card">
+            <div class="card-bar">
+              <span class="card-bar-title">Results Preview</span>
+              <div class="card-bar-actions">
+                <button class="mini-action-btn" onclick="alert('Query configuration saved to session.')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                    <polyline points="7 3 7 8 15 8"></polyline>
+                  </svg>
+                  <span>Save Query</span>
+                </button>
+                <button class="mini-action-btn" onclick="exportTableToCSV()">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  <span>Export Results</span>
+                </button>
+              </div>
+            </div>
 
-    </main>
+            <div class="results-content-split">
+              <!-- RESULTS DATA TABLE -->
+              <div class="table-container" id="tableViewport">
+                <table class="preview-data-table">
+                  <thead>
+                    <tr>
+                      <th>Store ID</th>
+                      <th>Total Revenue</th>
+                      <th>Location</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>10</td><td>₹3,36,593</td><td>Electronics</td></tr>
+                    <tr><td>22</td><td>₹3,36,793</td><td>Apparel</td></tr>
+                    <tr><td>13</td><td>₹3,08,000</td><td>Electronics</td></tr>
+                    <tr><td>14</td><td>₹3,06,090</td><td>Electronics</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- MINI CHART VISUALIZER -->
+              <div class="preview-chart-box">
+                <div class="chart-y-ticks">
+                  <span>2500</span>
+                  <span>2000</span>
+                  <span>1500</span>
+                  <span>1000</span>
+                  <span>500</span>
+                  <span>0</span>
+                </div>
+                <div class="preview-bars" id="previewBars">
+                  <div class="p-bar" style="height: 85%;"></div>
+                  <div class="p-bar" style="height: 72%;"></div>
+                  <div class="p-bar" style="height: 58%;"></div>
+                  <div class="p-bar" style="height: 44%;"></div>
+                  <div class="p-bar" style="height: 32%;"></div>
+                  <div class="p-bar" style="height: 18%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- EXECUTIVE INSIGHT SUMMARY AT BOTTOM OF PREVIEW -->
+            <div class="preview-insight-strip" id="previewInsightStrip">
+              <span class="insight-bullet">AI Insight:</span>
+              <span id="insightText">Delhi and Mumbai hubs drive 52% of total retail turnover; buffer stocks for apparel items are recommended ahead of peak festive demand.</span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
 
     <!-- SLIDE-OVER SCHEMA EXPLORER DRAWER -->
     <div class="drawer-overlay hidden" id="drawerOverlay" onclick="toggleSchemaDrawer()"></div>
     <aside class="schema-drawer hidden" id="schemaDrawer">
-      <div class="drawer-header">
-        <div class="drawer-title-row">
+      <div class="drawer-top">
+        <div class="drawer-heading">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
             <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
             <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
           </svg>
-          <h3>Warehouse Schema</h3>
+          <span>BigQuery Ground-Truth Schema</span>
         </div>
-        <button class="drawer-close-btn" onclick="toggleSchemaDrawer()">&times;</button>
+        <button class="close-x" onclick="toggleSchemaDrawer()">&times;</button>
       </div>
 
-      <div class="drawer-body">
+      <div class="drawer-content">
         <div class="schema-tree-block">
-          <div class="dataset-header">
-            <span class="folder-glyph">📂</span>
-            <strong>retailiq_transformed</strong>
-          </div>
+          <div class="schema-dataset-label">retailiq-analytics-508120.retailiq_transformed</div>
 
-          <div class="table-tree-item">
-            <div class="table-name-row" onclick="toggleTableFields('fct_sales_daily')">
-              <span class="table-glyph">📄</span>
-              <span class="table-name">fct_sales_daily</span>
-              <span class="table-badge-rows">91,690 rows</span>
+          <div class="schema-table-card">
+            <div class="schema-table-title" onclick="toggleCols('fct_sales_daily')">
+              <span>fct_sales_daily</span>
+              <span class="row-count-tag">91,690 rows</span>
             </div>
-            <ul class="fields-list" id="fields_fct_sales_daily">
-              <li><span class="col-name">sale_date</span> <span class="col-type">DATE</span></li>
-              <li><span class="col-name">store_name</span> <span class="col-type">STRING</span></li>
-              <li><span class="col-name">city</span> <span class="col-type">STRING</span></li>
-              <li><span class="col-name">region</span> <span class="col-type">STRING</span></li>
-              <li><span class="col-name">product_name</span> <span class="col-type">STRING</span></li>
-              <li><span class="col-name">category</span> <span class="col-type">STRING</span></li>
-              <li><span class="col-name">quantity_sold</span> <span class="col-type">INT64</span></li>
-              <li><span class="col-name">revenue</span> <span class="col-type">FLOAT64</span></li>
-              <li><span class="col-name">is_festive_season</span> <span class="col-type">BOOL</span></li>
+            <ul class="schema-col-list" id="cols_fct_sales_daily">
+              <li><span>sale_date</span> <span class="t-type">DATE</span></li>
+              <li><span>store_name</span> <span class="t-type">STRING</span></li>
+              <li><span>city</span> <span class="t-type">STRING</span></li>
+              <li><span>region</span> <span class="t-type">STRING</span></li>
+              <li><span>product_name</span> <span class="t-type">STRING</span></li>
+              <li><span>quantity_sold</span> <span class="t-type">INT64</span></li>
+              <li><span>revenue</span> <span class="t-type">FLOAT64</span></li>
+              <li><span>is_festive_season</span> <span class="t-type">BOOL</span></li>
             </ul>
           </div>
 
-          <div class="table-tree-item">
-            <div class="table-name-row" onclick="toggleTableFields('fct_inventory_health')">
-              <span class="table-glyph">📄</span>
-              <span class="table-name">fct_inventory_health</span>
-              <span class="table-badge-rows">500 rows</span>
+          <div class="schema-table-card">
+            <div class="schema-table-title" onclick="toggleCols('fct_inventory_health')">
+              <span>fct_inventory_health</span>
+              <span class="row-count-tag">500 rows</span>
             </div>
-            <ul class="fields-list" id="fields_fct_inventory_health">
-              <li><span class="col-name">store_name</span> <span class="col-type">STRING</span></li>
-              <li><span class="col-name">product_name</span> <span class="col-type">STRING</span></li>
-              <li><span class="col-name">current_stock</span> <span class="col-type">INT64</span></li>
-              <li><span class="col-name">reorder_point</span> <span class="col-type">INT64</span></li>
-              <li><span class="col-name">days_of_supply</span> <span class="col-type">FLOAT64</span></li>
-              <li><span class="col-name">stock_status</span> <span class="col-type">STRING</span></li>
-              <li><span class="col-name">revenue_at_risk</span> <span class="col-type">FLOAT64</span></li>
-              <li><span class="col-name">buffer_days</span> <span class="col-type">FLOAT64</span></li>
+            <ul class="schema-col-list" id="cols_fct_inventory_health">
+              <li><span>store_name</span> <span class="t-type">STRING</span></li>
+              <li><span>product_name</span> <span class="t-type">STRING</span></li>
+              <li><span>current_stock</span> <span class="t-type">INT64</span></li>
+              <li><span>reorder_point</span> <span class="t-type">INT64</span></li>
+              <li><span>days_of_supply</span> <span class="t-type">FLOAT64</span></li>
+              <li><span>stock_status</span> <span class="t-type">STRING</span></li>
+              <li><span>revenue_at_risk</span> <span class="t-type">FLOAT64</span></li>
+              <li><span>buffer_days</span> <span class="t-type">FLOAT64</span></li>
             </ul>
           </div>
 
-          <div class="table-tree-item">
-            <div class="table-name-row" onclick="toggleTableFields('agg_store_performance')">
-              <span class="table-glyph">📄</span>
-              <span class="table-name">agg_store_performance</span>
-              <span class="table-badge-rows">10 rows</span>
+          <div class="schema-table-card">
+            <div class="schema-table-title" onclick="toggleCols('agg_store_performance')">
+              <span>agg_store_performance</span>
+              <span class="row-count-tag">10 rows</span>
             </div>
-            <ul class="fields-list" id="fields_agg_store_performance">
-              <li><span class="col-name">store_name</span> <span class="col-type">STRING</span></li>
-              <li><span class="col-name">city</span> <span class="col-type">STRING</span></li>
-              <li><span class="col-name">region</span> <span class="col-type">STRING</span></li>
-              <li><span class="col-name">total_revenue</span> <span class="col-type">FLOAT64</span></li>
-              <li><span class="col-name">festive_revenue</span> <span class="col-type">FLOAT64</span></li>
-              <li><span class="col-name">non_festive_revenue</span> <span class="col-type">FLOAT64</span></li>
-              <li><span class="col-name">active_selling_days</span> <span class="col-type">INT64</span></li>
+            <ul class="schema-col-list" id="cols_agg_store_performance">
+              <li><span>store_name</span> <span class="t-type">STRING</span></li>
+              <li><span>total_revenue</span> <span class="t-type">FLOAT64</span></li>
+              <li><span>festive_revenue</span> <span class="t-type">FLOAT64</span></li>
+              <li><span>non_festive_revenue</span> <span class="t-type">FLOAT64</span></li>
+              <li><span>active_selling_days</span> <span class="t-type">INT64</span></li>
             </ul>
           </div>
 
